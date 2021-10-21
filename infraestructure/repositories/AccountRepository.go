@@ -34,7 +34,7 @@ func (ar *AccountRepository) CreateAccount(name string) (*model.Balance, error) 
 	response.Name = name
 
 	if err != nil {
-		return nil, err
+		return nil, Handle(err)
 	}
 
 	return &response, nil
@@ -47,7 +47,7 @@ func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
 		GetAccountsQuery,
 	)
 	if err != nil {
-		return nil, err
+		return nil, Handle(err)
 	}
 
 	var scanError error
@@ -81,7 +81,7 @@ func (ar *AccountRepository) Deposit(accountId int64, amount int64) (bool, error
 		accountId,
 	)
 	if err != nil {
-		return false, err
+		return false, Handle(err)
 	}
 
 	rows := row.RowsAffected()
@@ -100,7 +100,7 @@ func (ar *AccountRepository) Withdraw(accountId int64, amount int64) (bool, erro
 		accountId,
 	)
 	if err != nil {
-		return false, err
+		return false, Handle(err)
 	}
 
 	rows := row.RowsAffected()
@@ -120,7 +120,7 @@ func (ar *AccountRepository) Buy(accountId int64, amount int64, currency string,
 		accountId,
 	)
 	if err != nil {
-		return false, err
+		return false, Handle(err)
 	}
 
 	rows := row.RowsAffected()
@@ -141,7 +141,7 @@ func (ar *AccountRepository) Vender(accountId int64, amount int64, currency stri
 	)
 
 	if err != nil {
-		return false, err
+		return false, Handle(err)
 	}
 
 	rows := row.RowsAffected()

@@ -1,12 +1,14 @@
 package repositories
 
 import (
+	"arriba-challenge/domain/model"
 	"arriba-challenge/infraestructure/config"
 	"context"
 	"fmt"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"strings"
 	"time"
 )
 
@@ -67,4 +69,16 @@ func (d *DatabaseImpl) QueryRow(ctx context.Context, sql string, args ...interfa
 
 func (d *DatabaseImpl) Query(ctx context.Context, sql string) (pgx.Rows, error) {
 	return d.conn.Query(ctx, sql)
+}
+
+func Handle(err error) error {
+	if strings.Contains(err.Error(), "ch_positive_usd") {
+		return model.NotEnoughFiat{}
+	} else if strings.Contains(err.Error(), "ch_positive_btc") {
+		return model.NotEnoughBtc{}
+	} else if strings.Contains(err.Error(), "ch_positive_eth") {
+		return model.NotEnoughETH{}
+	} else {
+		return model.SqlInternalError{}
+	}
 }

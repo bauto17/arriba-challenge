@@ -17,6 +17,9 @@ func NewWebServer(config config.WebServerConfig, actions *injection.Actions) *We
 	accountHandler := handlers.NewAccountHandler(actions)
 	r := gin.New()
 
+	r.GET("", func(g *gin.Context) {
+		g.String(200, "UP!")
+	})
 	// Simple group: v1
 	v1 := r.Group("/account")
 	{
@@ -36,5 +39,5 @@ func NewWebServer(config config.WebServerConfig, actions *injection.Actions) *We
 }
 
 func (ws *WebServer) Start() error {
-	return ws.engine.Run(ws.config.Port)
+	return ws.engine.Run(":" + ws.config.Port)
 }

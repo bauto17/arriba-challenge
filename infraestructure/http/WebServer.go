@@ -17,14 +17,15 @@ func NewWebServer(config config.WebServerConfig, actions *injection.Actions) *We
 	accountHandler := handlers.NewAccountHandler(actions)
 	r := gin.New()
 
-	r.GET("", func(g *gin.Context) {
+	r.GET("", accountHandler.GetAccounts)
+	r.GET("/health", func(g *gin.Context) {
 		g.String(200, "UP!")
 	})
 	// Simple group: v1
 	v1 := r.Group("/account")
 	{
 		v1.POST("", accountHandler.CreateAccount)
-		v1.GET("", accountHandler.GetAccounts)
+
 		v1.POST("/:account_id/deposit", accountHandler.Deposit)
 		v1.POST("/:account_id/withdraw", accountHandler.Withdraw)
 		v1.POST("/:account_id/buy", accountHandler.Buy)

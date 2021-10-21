@@ -18,6 +18,10 @@ const CreateAccountQuery = `
 INSERT INTO accounts (name, usd, btc, eth) VALUES ($1, 0, 0, 0) RETURNING id
 `
 
+const GetAccountsQuery = `
+SELECT id, name, usd, btc, eth FROM accounts
+`
+
 const DepositQuery = `
 UPDATE accounts SET usd = (usd+$1) WHERE id = $2;
 `

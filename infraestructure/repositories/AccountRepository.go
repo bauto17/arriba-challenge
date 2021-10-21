@@ -44,7 +44,7 @@ func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
 	var response []*model.Balance
 	rows, err := ar.db.Query(
 		context.Background(),
-		CreateAccountQuery,
+		GetAccountsQuery,
 	)
 	if err != nil {
 		return nil, err
@@ -56,6 +56,9 @@ func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
 		scanError = rows.Scan(
 			&item.Id,
 			&item.Name,
+			&item.Usd,
+			&item.Btc,
+			&item.Eth,
 		)
 
 		if scanError == nil {

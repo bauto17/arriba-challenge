@@ -18,7 +18,7 @@ func BuildRepositories(config config.GeneralConfig) (*Repositories, error) {
 		return nil, err
 	}
 
-	currencyRepo := repositories.NewCurrencyRepository()
+	currencyRepo := repositories.NewCurrencyRepository(config.CurrencyConfig)
 
 	return &Repositories{
 		AccountRepository:  accountRepo,

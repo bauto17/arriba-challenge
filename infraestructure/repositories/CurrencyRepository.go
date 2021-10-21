@@ -1,26 +1,29 @@
 package repositories
 
-import "arriba-challenge/domain/model"
+import (
+	"arriba-challenge/domain/model"
+	"arriba-challenge/infraestructure/config"
+)
 
 type Currency struct {
 	name  string
-	value int64
+	value int
 }
 
 type CurrencyRepository struct {
 	data map[string]Currency
 }
 
-func NewCurrencyRepository() model.CurrencyRepository {
+func NewCurrencyRepository(config config.CurrencyConfig) model.CurrencyRepository {
 	return &CurrencyRepository{
 		data: map[string]Currency{
 			"BTC": {
 				name:  "btc",
-				value: 25,
+				value: config.Btc,
 			},
 			"ETH": {
 				name:  "eth",
-				value: 6,
+				value: config.Eth,
 			},
 		},
 	}
@@ -28,5 +31,5 @@ func NewCurrencyRepository() model.CurrencyRepository {
 
 func (cr *CurrencyRepository) GetCurrency(name string) (string, int64) {
 	item := cr.data[name]
-	return item.name, item.value
+	return item.name, int64(item.value)
 }

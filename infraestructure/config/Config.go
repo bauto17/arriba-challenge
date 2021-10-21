@@ -9,6 +9,7 @@ import (
 type GeneralConfig struct {
 	DatabaseConfig
 	WebServerConfig
+	CurrencyConfig
 }
 
 func GetConfig() GeneralConfig {
@@ -25,6 +26,10 @@ func GetConfig() GeneralConfig {
 		WebServerConfig{
 			Port: getEnv("PORT"),
 		},
+		CurrencyConfig{
+			Btc: getIntEnv("BTC_VALUE"),
+			Eth: getIntEnv("ETH_VALUE"),
+		},
 	}
 }
 
@@ -40,6 +45,11 @@ type DatabaseConfig struct {
 	Password           string
 	PoolSize           int64
 	ConnLifeTimeSecond int64
+}
+
+type CurrencyConfig struct {
+	Btc int
+	Eth int
 }
 
 func getEnv(envName string) string {

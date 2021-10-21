@@ -24,7 +24,7 @@ func NewWebServer(config config.WebServerConfig, actions *injection.Actions) *We
 	v1 := r.Group("/account")
 	{
 		v1.POST("", accountHandler.CreateAccount)
-		v1.GET("", accountHandler.CreateAccount)
+		v1.GET("", accountHandler.GetAccounts)
 		v1.POST("/:account_id/deposit", accountHandler.Deposit)
 		v1.POST("/:account_id/withdraw", accountHandler.Withdraw)
 		v1.POST("/:account_id/buy", accountHandler.Buy)

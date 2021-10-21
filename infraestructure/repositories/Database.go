@@ -71,7 +71,7 @@ func (d *DatabaseImpl) Query(ctx context.Context, sql string) (pgx.Rows, error) 
 	return d.conn.Query(ctx, sql)
 }
 
-func Handle(err error) error {
+func Handle(err error) model.Error {
 	if strings.Contains(err.Error(), "ch_positive_usd") {
 		return model.NotEnoughFiat{}
 	} else if strings.Contains(err.Error(), "ch_positive_btc") {

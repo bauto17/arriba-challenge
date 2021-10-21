@@ -14,7 +14,7 @@ func NewVender(repo model.AccountRepository, currencyRepo model.CurrencyReposito
 	}
 }
 
-func (ca *Vender) Execute(accountId int64, currency string, amount int64) (bool, error) {
+func (ca *Vender) Execute(accountId int64, currency string, amount int64) (bool, model.Error) {
 	idC, v := ca.currencyRepo.GetCurrency(currency)
 
 	return ca.repo.Vender(accountId, v*amount, idC, amount)

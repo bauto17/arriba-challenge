@@ -12,6 +12,6 @@ func NewGetAccounts(repo model.AccountRepository) *GetAccounts {
 	}
 }
 
-func (ca *GetAccounts) Execute() ([]*model.Balance, error) {
+func (ca *GetAccounts) Execute() ([]*model.Balance, model.Error) {
 	return ca.repo.GetAccounts()
 }

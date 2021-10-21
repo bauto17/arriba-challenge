@@ -4,7 +4,6 @@ import (
 	"arriba-challenge/infraestructure/http/request"
 	"arriba-challenge/infraestructure/injection"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -26,10 +25,9 @@ func (ah *AccountHandler) CreateAccount(c *gin.Context) {
 		return
 	}
 
-	balance, err := ah.Actions.CreateAccount.Execute(json.Name)
-	if err != nil {
-		log.Println(err.Error())
-		c.String(503, err.Error())
+	balance, aErr := ah.Actions.CreateAccount.Execute(json.Name)
+	if aErr != nil {
+		c.String(aErr.Code(), aErr.Error())
 		return
 	}
 	c.JSON(200, gin.H{"response": balance})
@@ -38,8 +36,7 @@ func (ah *AccountHandler) CreateAccount(c *gin.Context) {
 func (ah *AccountHandler) GetAccounts(c *gin.Context) {
 	list, err := ah.Actions.GetAccounts.Execute()
 	if err != nil {
-		log.Println(err.Error())
-		c.String(503, err.Error())
+		c.String(err.Code(), err.Error())
 		return
 	}
 	c.JSON(200, gin.H{"response": list})
@@ -48,6 +45,10 @@ func (ah *AccountHandler) GetAccounts(c *gin.Context) {
 func (ah *AccountHandler) Deposit(c *gin.Context) {
 	param := c.Param("account_id")
 	accountId, err := strconv.ParseInt(param, 0, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	var json request.DepositRequest
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -55,9 +56,9 @@ func (ah *AccountHandler) Deposit(c *gin.Context) {
 		return
 	}
 
-	balance, err := ah.Actions.Deposit.Execute(accountId, json.Amount)
-	if err != nil {
-		c.String(503, err.Error())
+	balance, aErr := ah.Actions.Deposit.Execute(accountId, json.Amount)
+	if aErr != nil {
+		c.String(aErr.Code(), aErr.Error())
 	}
 	c.JSON(200, gin.H{"response": balance})
 }
@@ -65,6 +66,10 @@ func (ah *AccountHandler) Deposit(c *gin.Context) {
 func (ah *AccountHandler) Withdraw(c *gin.Context) {
 	param := c.Param("account_id")
 	accountId, err := strconv.ParseInt(param, 0, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	var json request.WithdrawRequest
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -72,9 +77,10 @@ func (ah *AccountHandler) Withdraw(c *gin.Context) {
 		return
 	}
 
-	balance, err := ah.Actions.Withdraw.Execute(accountId, json.Amount)
-	if err != nil {
-		c.String(503, err.Error())
+	balance, aErr := ah.Actions.Withdraw.Execute(accountId, json.Amount)
+	if aErr != nil {
+		c.String(aErr.Code(), aErr.Error())
+		return
 	}
 	c.JSON(200, gin.H{"response": balance})
 }
@@ -82,6 +88,10 @@ func (ah *AccountHandler) Withdraw(c *gin.Context) {
 func (ah *AccountHandler) Buy(c *gin.Context) {
 	param := c.Param("account_id")
 	accountId, err := strconv.ParseInt(param, 0, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	var json request.BuyRequest
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -89,9 +99,10 @@ func (ah *AccountHandler) Buy(c *gin.Context) {
 		return
 	}
 
-	balance, err := ah.Actions.Buy.Execute(accountId, json.Currency, json.Amount)
-	if err != nil {
-		c.String(503, err.Error())
+	balance, aErr := ah.Actions.Buy.Execute(accountId, json.Currency, json.Amount)
+	if aErr != nil {
+		c.String(aErr.Code(), aErr.Error())
+		return
 	}
 	c.JSON(200, gin.H{"response": balance})
 }
@@ -106,9 +117,10 @@ func (ah *AccountHandler) Vender(c *gin.Context) {
 		return
 	}
 
-	balance, err := ah.Actions.Vender.Execute(accountId, json.Currency, json.Amount)
-	if err != nil {
-		c.String(503, err.Error())
+	balance, aErr := ah.Actions.Vender.Execute(accountId, json.Currency, json.Amount)
+	if aErr != nil {
+		c.String(aErr.Code(), err.Error())
+		return
 	}
 	c.JSON(200, gin.H{"response": balance})
 }

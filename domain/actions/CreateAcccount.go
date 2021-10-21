@@ -12,6 +12,6 @@ func NewCreateAccount(repo model.AccountRepository) *CreateAccount {
 	}
 }
 
-func (ca *CreateAccount) Execute(name string) (*model.Balance, error) {
+func (ca *CreateAccount) Execute(name string) (*model.Balance, model.Error) {
 	return ca.repo.CreateAccount(name)
 }

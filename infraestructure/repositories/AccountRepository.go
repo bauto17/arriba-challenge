@@ -4,7 +4,6 @@ import (
 	"arriba-challenge/domain/model"
 	"arriba-challenge/infraestructure/config"
 	"context"
-	"errors"
 	"strings"
 )
 
@@ -23,7 +22,7 @@ func NewAccountRepository(config config.GeneralConfig) (model.AccountRepository,
 	}, nil
 }
 
-func (ar *AccountRepository) CreateAccount(name string) (*model.Balance, error) {
+func (ar *AccountRepository) CreateAccount(name string) (*model.Balance, model.Error) {
 	var response model.Balance
 	row := ar.db.QueryRow(
 		context.Background(),
@@ -40,7 +39,7 @@ func (ar *AccountRepository) CreateAccount(name string) (*model.Balance, error) 
 	return &response, nil
 }
 
-func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
+func (ar *AccountRepository) GetAccounts() ([]*model.Balance, model.Error) {
 	var response []*model.Balance
 	rows, err := ar.db.Query(
 		context.Background(),
@@ -65,7 +64,7 @@ func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
 			response = append(response, &item)
 		} else {
 			if scanError != nil {
-				return nil, err
+				return nil, Handle(scanError)
 			}
 		}
 	}
@@ -73,7 +72,7 @@ func (ar *AccountRepository) GetAccounts() ([]*model.Balance, error) {
 	return response, nil
 }
 
-func (ar *AccountRepository) Deposit(accountId int64, amount int64) (bool, error) {
+func (ar *AccountRepository) Deposit(accountId int64, amount int64) (bool, model.Error) {
 	row, err := ar.db.Exec(
 		context.Background(),
 		DepositQuery,
@@ -86,13 +85,13 @@ func (ar *AccountRepository) Deposit(accountId int64, amount int64) (bool, error
 
 	rows := row.RowsAffected()
 	if rows == 0 {
-		return false, errors.New("no row affected")
+		return false, model.NoRowsAffectedError{}
 	}
 
 	return true, nil
 }
 
-func (ar *AccountRepository) Withdraw(accountId int64, amount int64) (bool, error) {
+func (ar *AccountRepository) Withdraw(accountId int64, amount int64) (bool, model.Error) {
 	row, err := ar.db.Exec(
 		context.Background(),
 		WithdrawQuery,
@@ -105,13 +104,13 @@ func (ar *AccountRepository) Withdraw(accountId int64, amount int64) (bool, erro
 
 	rows := row.RowsAffected()
 	if rows == 0 {
-		return false, errors.New("no row affected")
+		return false, model.NoRowsAffectedError{}
 	}
 
 	return true, nil
 }
 
-func (ar *AccountRepository) Buy(accountId int64, amount int64, currency string, currencyAmount int64) (bool, error) {
+func (ar *AccountRepository) Buy(accountId int64, amount int64, currency string, currencyAmount int64) (bool, model.Error) {
 	row, err := ar.db.Exec(
 		context.Background(),
 		strings.Replace(BuyQuery, ":currency", currency, -1),
@@ -125,13 +124,13 @@ func (ar *AccountRepository) Buy(accountId int64, amount int64, currency string,
 
 	rows := row.RowsAffected()
 	if rows == 0 {
-		return false, errors.New("no row affected")
+		return false, model.NoRowsAffectedError{}
 	}
 
 	return true, nil
 }
 
-func (ar *AccountRepository) Vender(accountId int64, amount int64, currency string, currencyAmount int64) (bool, error) {
+func (ar *AccountRepository) Vender(accountId int64, amount int64, currency string, currencyAmount int64) (bool, model.Error) {
 	row, err := ar.db.Exec(
 		context.Background(),
 		strings.Replace(VenderQuery, ":currency", currency, -1),
@@ -146,7 +145,7 @@ func (ar *AccountRepository) Vender(accountId int64, amount int64, currency stri
 
 	rows := row.RowsAffected()
 	if rows == 0 {
-		return false, errors.New("no row affected")
+		return false, model.NoRowsAffectedError{}
 	}
 
 	return true, nil

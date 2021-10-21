@@ -12,6 +12,6 @@ func NewDeposit(repo model.AccountRepository) *Deposit {
 	}
 }
 
-func (ca *Deposit) Execute(accountId int64, amount int64) (bool, error) {
+func (ca *Deposit) Execute(accountId int64, amount int64) (bool, model.Error) {
 	return ca.repo.Deposit(accountId, amount)
 }

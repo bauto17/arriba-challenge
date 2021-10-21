@@ -1,6 +1,7 @@
 # ARRIBA CHALLENGE
 
 ## Use
+the service is running on this [url](https://arriba-challenge-production.up.railway.app)
 
 ### List all accounts 
 ```

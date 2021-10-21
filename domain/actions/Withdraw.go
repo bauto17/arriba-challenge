@@ -12,6 +12,6 @@ func NewWithdraw(repo model.AccountRepository) *Withdraw {
 	}
 }
 
-func (ca *Withdraw) Execute(accountId int64, amount int64) (bool, error) {
+func (ca *Withdraw) Execute(accountId int64, amount int64) (bool, model.Error) {
 	return ca.repo.Withdraw(accountId, amount)
 }
